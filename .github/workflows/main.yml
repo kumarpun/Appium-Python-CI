@@ -14,8 +14,8 @@ jobs:
      - name: Browserstack env setup
        uses: browserstack/github-actions/setup-env@master
        with:
-         username: ${{ secrets.SAUCELAB_ACCESSKEY }}
-         access-key: ${{ secrets.SAUCELAB_USERNAME }}
+         username: ${{ secrets.SAUCELAB_USERNAME }}
+         access-key: ${{ secrets.SAUCELAB_ACCESSKEY }}
 
      - name: BrowserStack Local Tunnel Setup
        uses: browserstack/github-actions/setup-local@master
