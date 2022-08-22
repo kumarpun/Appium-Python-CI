@@ -1,0 +1,46 @@
+name: Appium CI with Python
+
+on:
+ workflow_dispatch:
+ push:
+   branches: [ master ]
+ pull_request:
+   branches: [ master ]
+
+jobs:
+ test:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Browserstack env setup
+       uses: browserstack/github-actions/setup-env@master
+       with:
+         username: ${{ secrets.SAUCELAB_ACCESSKEY }}
+         access-key: ${{ secrets.SAUCELAB_USERNAME }}
+
+     - name: BrowserStack Local Tunnel Setup
+       uses: browserstack/github-actions/setup-local@master
+       with:
+         local-testing: start
+         local-identifier: random 
+
+     - name: checkout the repository
+       uses: actions/checkout@v2
+
+     - name: Set up python
+       uses: actions/setup-python@v2
+       with:
+         python-version: "3.10"
+     - name: Install dependency
+       run: |
+           python -m pip install --upgrade pip
+           pip install flake8 pytest Appium-Python-Client py six selenium
+ 
+     - name: run tests
+       run: |
+          cd /home/runner/work/mobile_qa/mobile_qa/tests
+          pytest TestSuite.py -rA -l
+    
+     - name: 'BrowserStackLocal Stop'  # Terminating the BrowserStackLocal tunnel connection
+       uses: browserstack/github-actions/setup-local@master
+       with:
+         local-testing: stop
